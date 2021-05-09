@@ -9,7 +9,7 @@ public class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     var wandPeripheral : CBPeripheral!
     let sensorUUID = CBUUID(string: "64A70002-F691-4B93-A6F4-0968F5B648F8")
     let buttonUUID = CBUUID(string: "64A7000D-F691-4B93-A6F4-0968F5B648F8")
-    public var delegates : [WandDelegate]?
+    public var delegates : [WandDelegate] = []
     
     override init() {
         super.init()
@@ -20,7 +20,8 @@ public class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         guard let characteristicData = characteristic.value else { return }
         let byteArray = [UInt8](characteristicData)
         let point = Point(x: byteArray[2], y: byteArray[0])
-        for delegate in delegates ?? [] {
+        print("WANDKIT DEBUG: \(point)")
+        for delegate in delegates {
             delegate.location(point)
         }
     }
@@ -29,10 +30,11 @@ public class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         guard let characteristicData = characteristic.value else { return }
         let byteArray = [UInt8](characteristicData)
         
+        print("WANDKIT DEBUG: BUTTON PRESS")
         // It sometimes gives us both 1 & 0 so we can't use the value and instead check if its true then toggle.
         if byteArray[0] == 1 {
             // Toggle button
-            for delegate in delegates ?? [] {
+            for delegate in delegates {
                 delegate.buttonPress()
             }
         }
@@ -60,7 +62,7 @@ public class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     public func centralManager (_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         if ((peripheral.name?.contains("Kano-Wand")) == true) {
-            for delegate in delegates ?? [] {
+            for delegate in delegates {
                 delegate.deviceFound()
             }
             wandPeripheral = peripheral
@@ -71,22 +73,21 @@ public class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     public func centralManager (_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("Connected!")
-        for delegate in delegates ?? [] {
+        for delegate in delegates {
             delegate.connected()
         }
         wandPeripheral.discoverServices(nil)
     }
     
     public func centralManager (_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        for delegate in delegates ?? [] {
+        for delegate in delegates {
             delegate.failToConnect()
         }
         centralManager.scanForPeripherals(withServices: nil)
     }
     
     public func centralManager (_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        for delegate in delegates ?? [] {
+        for delegate in delegates {
             delegate.disconnect()
         }
         centralManager.scanForPeripherals(withServices: nil)
