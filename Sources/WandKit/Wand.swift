@@ -20,7 +20,6 @@ public class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         guard let characteristicData = characteristic.value else { return }
         let byteArray = [UInt8](characteristicData)
         let point = Point(x: byteArray[2], y: byteArray[0])
-        print("WANDKIT DEBUG: \(point)")
         for delegate in delegates {
             delegate.location(point)
         }
@@ -30,7 +29,6 @@ public class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         guard let characteristicData = characteristic.value else { return }
         let byteArray = [UInt8](characteristicData)
         
-        print("WANDKIT DEBUG: BUTTON PRESS")
         // It sometimes gives us both 1 & 0 so we can't use the value and instead check if its true then toggle.
         if byteArray[0] == 1 {
             // Toggle button
