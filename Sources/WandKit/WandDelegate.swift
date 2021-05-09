@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol WandDelegate {
+public protocol WandDelegate {
     func deviceFound () // Called when Wand is discovered
     func connected () // Called when Wand connects to device
     func failToConnect () // Called if Wand fails to connect to device

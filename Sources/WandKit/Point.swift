@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Point {
+public struct Point {
     var x : UInt8
     var y : UInt8
 }

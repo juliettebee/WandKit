@@ -1,7 +1,7 @@
 import CoreBluetooth
 import Foundation
 
-class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+public class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     static let shared = Wand()
     
@@ -38,7 +38,7 @@ class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         }
     }
     
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+    public func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
             case .unknown:
                 print("central.state is .unknown")
@@ -58,7 +58,7 @@ class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         }
     }
     
-    func centralManager (_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+    public func centralManager (_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         if ((peripheral.name?.contains("Kano-Wand")) == true) {
             for delegate in delegates ?? [] {
                 delegate.deviceFound()
@@ -70,7 +70,7 @@ class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         }
     }
     
-    func centralManager (_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+    public func centralManager (_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("Connected!")
         for delegate in delegates ?? [] {
             delegate.connected()
@@ -78,21 +78,21 @@ class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         wandPeripheral.discoverServices(nil)
     }
     
-    func centralManager (_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+    public func centralManager (_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         for delegate in delegates ?? [] {
             delegate.failToConnect()
         }
         centralManager.scanForPeripherals(withServices: nil)
     }
     
-    func centralManager (_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+    public func centralManager (_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         for delegate in delegates ?? [] {
             delegate.disconnect()
         }
         centralManager.scanForPeripherals(withServices: nil)
     }
     
-    func peripheral (_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+    public func peripheral (_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         guard let services = peripheral.services else { return }
 
         for service in services {
@@ -100,7 +100,7 @@ class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         }
     }
     
-    func peripheral (_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+    public func peripheral (_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         guard let characteristics = service.characteristics else { return }
         
         for characteristic in characteristics {
@@ -113,7 +113,7 @@ class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         }
     }
     
-    func peripheral (_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+    public func peripheral (_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         switch characteristic.uuid {
             case sensorUUID:
                 sensor(from: characteristic)
