@@ -3,13 +3,13 @@ import Foundation
 
 public class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     
-    static let shared = Wand()
+    public static let shared = Wand()
     
     var centralManager : CBCentralManager!
     var wandPeripheral : CBPeripheral!
     let sensorUUID = CBUUID(string: "64A70002-F691-4B93-A6F4-0968F5B648F8")
     let buttonUUID = CBUUID(string: "64A7000D-F691-4B93-A6F4-0968F5B648F8")
-    var delegates : [WandDelegate]?
+    public var delegates : [WandDelegate]?
     
     override init() {
         super.init()
