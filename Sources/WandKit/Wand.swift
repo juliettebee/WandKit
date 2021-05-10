@@ -10,6 +10,7 @@ public class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     let sensorUUID = CBUUID(string: "64A70002-F691-4B93-A6F4-0968F5B648F8")
     let buttonUUID = CBUUID(string: "64A7000D-F691-4B93-A6F4-0968F5B648F8")
     public var delegates : [WandDelegate] = []
+    let debug = false
     
     override init() {
         super.init()
@@ -113,6 +114,11 @@ public class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     public func peripheral (_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        
+        if debug {
+            print("\(characteristic.uuid) : \(String(describing: characteristic.value))")
+        }
+        
         switch characteristic.uuid {
             case sensorUUID:
                 sensor(from: characteristic)
