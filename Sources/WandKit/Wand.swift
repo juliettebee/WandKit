@@ -116,7 +116,9 @@ public class Wand: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     public func peripheral (_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         
         if debug {
-            print("\(characteristic.uuid) : \(String(describing: characteristic.value))")
+            guard let characteristicData = characteristic.value else { return }
+            let byteArray = [UInt8](characteristicData)
+            print("\(characteristic.uuid) : \(byteArray)")
         }
         
         switch characteristic.uuid {
