@@ -8,7 +8,7 @@ import WandKit
 _ = Wand.shared
 ```
 That creates a shared Wand object and connects to the wand.
-To get info from a wand extend and subclass WandDelegate
+To get info from a wand extend and subclass WandDelegate and add the class to the delegate list with `Wand.shared.delegates.append(self)` in init or any other method.
 ```swift
 extension ViewController : WandDelegate {
     func deviceFound () {
